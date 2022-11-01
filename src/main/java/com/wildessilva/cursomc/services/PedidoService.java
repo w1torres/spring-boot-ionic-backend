@@ -12,6 +12,7 @@ import com.wildessilva.cursomc.domain.ItemPedido;
 import com.wildessilva.cursomc.domain.PagamentoComBoleto;
 import com.wildessilva.cursomc.domain.Pedido;
 import com.wildessilva.cursomc.domain.enums.EstadoPagamento;
+import com.wildessilva.cursomc.repositories.ClienteRepository;
 import com.wildessilva.cursomc.repositories.ItemPedidoRepository;
 import com.wildessilva.cursomc.repositories.PagamentoRepository;
 import com.wildessilva.cursomc.repositories.PedidoRepository;
@@ -35,6 +36,12 @@ public class PedidoService {
 	@Autowired
 	private ProdutoService produtoService;
 	
+	@Autowired
+	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private ClienteService clienteService;
+	
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
@@ -46,6 +53,7 @@ public class PedidoService {
 	public Pedido insert(Pedido obj) {
 		obj.setId(null);
 		obj.setInstante(new Date());
+		obj.setCliente(clienteService.find(obj.getCliente().getId()));
 		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
 		obj.getPagamento().setPedido(obj);
 		if(obj.getPagamento() instanceof PagamentoComBoleto) {
@@ -61,6 +69,7 @@ public class PedidoService {
 			ip.setPedido(obj);
 		}
 		itemPedidoRepository.saveAll(obj.getItens());
+		System.out.println(obj);
 		return obj;
 	}
 }
