@@ -19,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.wildessilva.cursomc.security.JWTAuthenticationFilter;
+import com.wildessilva.cursomc.security.JWTAuthorizationFilter;
 import com.wildessilva.cursomc.security.JWTUtil;
 
 @Configuration
@@ -58,7 +59,7 @@ public class SecurityConfig {
             .antMatchers(PUBLIC_MATCHERS).permitAll()
             .anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtUtil));
-        //http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
+        http.addFilter(new JWTAuthorizationFilter(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)), jwtUtil, userDetailsService));
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }    
