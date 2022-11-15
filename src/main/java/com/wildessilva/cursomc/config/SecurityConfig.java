@@ -43,8 +43,13 @@ public class SecurityConfig {
     public static final String[] PUBLIC_MATCHERS_GET = {
             "/produtos/**",
             "/categorias/**",
-            "/clientes/**"
     };    
+    
+
+    public static final String[] PUBLIC_MATCHERS_POST = {
+            "/clientes/**"           
+    };
+
     
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
@@ -55,6 +60,7 @@ public class SecurityConfig {
         
         http.cors().and().csrf().disable();
         http.authorizeRequests()
+            .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_POST).permitAll()
             .antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
             .antMatchers(PUBLIC_MATCHERS).permitAll()
             .anyRequest().authenticated();
