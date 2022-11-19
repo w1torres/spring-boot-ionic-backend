@@ -15,12 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.wildessilva.cursomc.domain.Cidade;
 import com.wildessilva.cursomc.domain.Cliente;
 import com.wildessilva.cursomc.domain.Endereco;
+import com.wildessilva.cursomc.domain.enums.Perfil;
 import com.wildessilva.cursomc.domain.enums.TipoCliente;
 import com.wildessilva.cursomc.dto.ClienteDTO;
 import com.wildessilva.cursomc.dto.ClienteNewDTO;
 import com.wildessilva.cursomc.repositories.CidadeRepository;
 import com.wildessilva.cursomc.repositories.ClienteRepository;
 import com.wildessilva.cursomc.repositories.EnderecoRepository;
+import com.wildessilva.cursomc.security.UserSS;
+import com.wildessilva.cursomc.services.exceptions.AuthorizationException;
 import com.wildessilva.cursomc.services.exceptions.DataIntegrityException;
 import com.wildessilva.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -38,11 +41,17 @@ public class ClienteService {
 	
 	@Autowired
 	private CidadeRepository cidadeRepository;
-	
+			
 	public Cliente find(Integer id) {
-		Optional<Cliente> obj = repo.findById(id);
+	    
+	    UserSS user = UserService.authenticated();
+	    if(user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
+	        throw new AuthorizationException("Acesso negado");
+	    }
+	
+	    Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
-				"Objeto não encontrado! Id: " + id + ", Tipo" + Cliente.class.getName()));
+	 			"Objeto não encontrado! Id: " + id + ", Tipo" + Cliente.class.getName()));
 			
 	}
 	

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.wildessilva.cursomc.resources.exception.StandardError;
 import com.wildessilva.cursomc.resources.exception.ValidationError;
+import com.wildessilva.cursomc.services.exceptions.AuthorizationException;
 import com.wildessilva.cursomc.services.exceptions.DataIntegrityException;
 import com.wildessilva.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -41,6 +42,13 @@ public class ResourceExceptionHandler {
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	}
+	
+	@ExceptionHandler(AuthorizationException.class)
+    public ResponseEntity<StandardError> authorization(ObjectNotFoundException e, HttpServletRequest request){
+        
+        StandardError err = new StandardError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+    }
 }
 
 
