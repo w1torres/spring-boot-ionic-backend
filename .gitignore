@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 *.pdf
+*.csv
+AWSSSO_c99d60c4a536e0eb_DO_NOT_DELETE.xml
+
 password.txt
 ### STS ###
 .apt_generated
