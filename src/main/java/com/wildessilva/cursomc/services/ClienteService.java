@@ -1,5 +1,6 @@
 package com.wildessilva.cursomc.services;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.wildessilva.cursomc.domain.Cidade;
 import com.wildessilva.cursomc.domain.Cliente;
@@ -19,7 +21,6 @@ import com.wildessilva.cursomc.domain.enums.Perfil;
 import com.wildessilva.cursomc.domain.enums.TipoCliente;
 import com.wildessilva.cursomc.dto.ClienteDTO;
 import com.wildessilva.cursomc.dto.ClienteNewDTO;
-import com.wildessilva.cursomc.repositories.CidadeRepository;
 import com.wildessilva.cursomc.repositories.ClienteRepository;
 import com.wildessilva.cursomc.repositories.EnderecoRepository;
 import com.wildessilva.cursomc.security.UserSS;
@@ -39,8 +40,9 @@ public class ClienteService {
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 	
+	
 	@Autowired
-	private CidadeRepository cidadeRepository;
+	private S3Service s3Service;
 			
 	public Cliente find(Integer id) {
 	    
@@ -113,5 +115,7 @@ public class ClienteService {
 		newObj.setEmail(obj.getEmail());
 	}
 	
-	
+	public URI uploadProfilePicture(MultipartFile multipartFile) {
+	    return s3Service.uploadFile(multipartFile);
+	}
 }
