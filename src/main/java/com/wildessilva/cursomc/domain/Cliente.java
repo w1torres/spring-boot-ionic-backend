@@ -61,7 +61,15 @@ public class Cliente  implements Serializable{
 		this.pedidos = pedidos;
 	}
 	
-	public Cliente() {
+	public String imageUrl;	
+	
+	public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    public Cliente() {
 	    addPerfil(Perfil.CLIENTE);
 	}
 	
@@ -172,5 +180,9 @@ public class Cliente  implements Serializable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}    			
+	}
+    public Cliente orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        return null;
+    } 			
 }
