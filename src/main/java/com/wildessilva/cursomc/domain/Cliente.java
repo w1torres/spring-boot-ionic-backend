@@ -60,16 +60,8 @@ public class Cliente  implements Serializable{
 	public void setPedidos(List<Pedido> pedidos) {
 		this.pedidos = pedidos;
 	}
-	
-	public String imageUrl;	
-	
-	public String getImageUrl() {
-        return imageUrl;
-    }
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-    public Cliente() {
+
+	public Cliente() {
 	    addPerfil(Perfil.CLIENTE);
 	}
 	

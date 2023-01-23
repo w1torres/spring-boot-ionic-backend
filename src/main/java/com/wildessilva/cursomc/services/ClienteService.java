@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +30,7 @@ import com.wildessilva.cursomc.services.exceptions.DataIntegrityException;
 import com.wildessilva.cursomc.services.exceptions.ObjectNotFoundException;
 
 @Service
-public class ClienteService {
+public class ClienteService<BufferedImage> {
 	
 	@Autowired
 	private BCryptPasswordEncoder pe;
@@ -38,11 +39,16 @@ public class ClienteService {
 	private ClienteRepository repo;
 	
 	@Autowired
-	private EnderecoRepository enderecoRepository;
-	
+	private EnderecoRepository enderecoRepository;	
 	
 	@Autowired
 	private S3Service s3Service;
+	
+	@Autowired
+	private ImageService imageService;
+	
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
 			
 	public Cliente find(Integer integer) {
 	    
@@ -122,12 +128,9 @@ public class ClienteService {
 	        throw new AuthorizationException("Acesso negado.");
 	    }
 	    
-	    URI uri = s3Service.uploadFile(multipartFile);
+	    java.awt.image.BufferedImage jpgImage = imageService.getJpgImageFromFile(multipartFile);
+	    String fileName = prefix + user.getId() + ".jpg";
 	    
-	    Cliente cli = repo.findById(user.getId());
-	    cli.setImageUrl(uri.toString());
-	    repo.save(cli);
-	    
-	    return uri;	    
+	    return s3Service.uploadFile(imageService.getInputStream(jpgImage, "jpg"), fileName, "image");	      
 	}
 }
