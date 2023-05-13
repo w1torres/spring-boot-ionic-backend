@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 *.pdf
 *.csv
+authentication_aws
 AWSSSO_c99d60c4a536e0eb_DO_NOT_DELETE.xml
 
 password.txt

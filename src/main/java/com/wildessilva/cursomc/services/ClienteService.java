@@ -53,17 +53,19 @@ public class ClienteService<BufferedImage> {
 	@Value("${img.profile.size}")
     private Integer size;
 	
-	public Cliente find(Integer integer) {
+	public Cliente find(Integer id) {
 	    
 	    UserSS user = UserService.authenticated();
-	    if(user == null || !user.hasRole(Perfil.ADMIN) && !integer.equals(user.getId())) {
+	    if(user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())) {
 	        throw new AuthorizationException("Acesso negado");
 	    }
 	
-	    Optional<Cliente> obj = Optional.empty();
-		return obj.orElseThrow(() -> new ObjectNotFoundException(
-	 			"Objeto não encontrado! Id: " + integer + ", Tipo" + Cliente.class.getName()));
-			
+	    Cliente obj = repo.findById(id);
+	    if (obj == null) {
+	    	throw new ObjectNotFoundException(
+	 			"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName());
+	    }
+		return obj;
 	}
 	
 	@Transactional
